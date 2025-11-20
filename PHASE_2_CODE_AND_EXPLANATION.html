@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 2: CRUD Operations for Books - Complete Code & Explanation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        header p {
+            font-size: 1.15em;
+            opacity: 0.95;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+        
+        nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.25);
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            overflow: hidden;
+        }
+        
+        nav h3 {
+            margin: 0;
+            padding: 20px 30px;
+            color: white;
+            font-size: 1.2em;
+            background: rgba(0, 0, 0, 0.1);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0;
+            padding: 15px 30px;
+            margin: 0;
+            background: rgba(255, 255, 255, 0.98);
+        }
+        
+        nav li {
+            margin: 0;
+        }
+        
+        nav a {
+            display: inline-block;
+            padding: 10px 18px;
+            background: transparent;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.95em;
+            border: 2px solid transparent;
+        }
+        
+        nav a:hover {
+            background: #f0f0f0;
+            border-color: #667eea;
+            color: #764ba2;
+            transform: translateY(-1px);
+        }
+        
+        nav a:active {
+            background: #e8e8e8;
+        }
+        
+        nav a.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #667eea;
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        h3 {
+            color: #764ba2;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        
+        h4 {
+            color: #555;
+            font-size: 1.1em;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 25px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em;
+            line-height: 1.8;
+            white-space: pre;
+            tab-size: 4;
+            -moz-tab-size: 4;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .code-block code {
+            font-family: 'Courier New', Courier, monospace;
+            display: block;
+        }
+        
+        .keyword { color: #c678dd; }
+        .string { color: #98c379; }
+        .function { color: #61afef; }
+        .comment { color: #5c6370; font-style: italic; }
+        .number { color: #d19a66; }
+        .tag { color: #e06c75; }
+        
+        .explanation {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #0288d1;
+        }
+        
+        .explanation h5 {
+            color: #0288d1;
+            margin-top: 0;
+            font-size: 1.05em;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .warning h5 {
+            color: #856404;
+            margin-top: 0;
+        }
+        
+        .success {
+            background: #d4edda;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #28a745;
+        }
+        
+        .success h5 {
+            color: #155724;
+            margin-top: 0;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #0c5460;
+        }
+        
+        .info h5 {
+            color: #0c5460;
+            margin-top: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        table tr:hover {
+            background: #f5f5f5;
+        }
+        
+        .file-structure {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .step {
+            background: #f0f0f0;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+        
+        .step strong {
+            color: #667eea;
+        }
+        
+        .highlight {
+            background: #fff9c4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+        }
+        
+        .command {
+            background: #282c34;
+            color: #98c379;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .output {
+            background: #1e1e1e;
+            color: #0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .learning-path {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        .learning-path ol {
+            margin-left: 20px;
+        }
+        
+        .learning-path li {
+            margin: 10px 0;
+            color: #1565c0;
+        }
+        
+        footer {
+            background: #667eea;
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        .btn-print {
+            background: #667eea;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+        
+        .btn-print:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+            
+            header h1 {
+                font-size: 1.8em;
+            }
+        }
+        
+        @media print {
+            nav, .btn-print {
+                display: none;
+            }
+            
+            body {
+                background: white;
+            }
+            
+            .section, header {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+    <script>
+        // Active link tracking on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('nav a');
+            const sections = document.querySelectorAll('.section, header');
+            
+            function updateActiveLink() {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (window.scrollY >= sectionTop - 150) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    
+                    if (link.getAttribute('href') === '#' + current) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const href = this.getAttribute('href');
+                    
+                    if (href.startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = href.substring(1);
+                        const targetSection = document.getElementById(targetId);
+                        
+                        if (targetSection) {
+                            targetSection.scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                            
+                            setTimeout(() => {
+                                updateActiveLink();
+                            }, 500);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>📚 Library Management System - Phase 2</h1>
+            <p>Full CRUD Operations for Books - Complete Code Guide for Students</p>
+        </header>
+        
+        <!-- Navigation -->
+        <nav>
+            <h3>📑 Quick Navigation</h3>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#forms">Forms</a></li>
+                <li><a href="#views">Views</a></li>
+                <li><a href="#templates">Templates</a></li>
+                <li><a href="#urls">URLs</a></li>
+                <li><a href="#testing">Testing</a></li>
+            </ul>
+        </nav>
+        
+        <button class="btn-print" onclick="window.print()">🖨️ Print this Guide</button>
+        
+        <!-- Overview Section -->
+        <div class="section" id="overview">
+            <h2>🎯 Phase 2 Overview</h2>
+            
+            <h3>What You'll Learn</h3>
+            <p>In Phase 2, we add full CRUD (Create, Read, Update, Delete) functionality for books:</p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+                <li>✅ Create books with forms</li>
+                <li>✅ Display single book details</li>
+                <li>✅ Edit existing books</li>
+                <li>✅ Delete books from database</li>
+                <li>✅ Add confirmation dialogs</li>
+            </ul>
+            
+            <h3>Learning Objectives</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Concept</th>
+                        <th>What You'll Do</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Django Forms</strong></td>
+                        <td>Create ModelForm for Book model</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Create Operation</strong></td>
+                        <td>Build book creation view and form</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Read Operation</strong></td>
+                        <td>Display single book details page</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Update Operation</strong></td>
+                        <td>Edit book information</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Delete Operation</strong></td>
+                        <td>Remove books with confirmation</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Forms Section -->
+        <div class="section" id="forms">
+            <h2>📝 Creating Book Form</h2>
+            
+            <h3>Create forms.py File</h3>
+            <p>Create new file: <span class="highlight">myapp/forms.py</span></p>
+            
+            <div class="code-block"><span class="keyword">from</span> django <span class="keyword">import</span> forms
+<span class="keyword">from</span> .models <span class="keyword">import</span> Book
+
+<span class="keyword">class</span> <span class="tag">BookForm</span>(forms.ModelForm):
+    <span class="keyword">class</span> Meta:
+        model = Book
+        fields = [<span class="string">'title'</span>, <span class="string\">'author'</span>, 
+                  <span class="string\">'isbn'</span>, <span class=\"string\">'quantity'</span>]
+        widgets = {
+            <span class=\"string\">'title'</span>: forms.TextInput(
+                attrs={
+                    <span class=\"string\">'class'</span>: <span class=\"string\">'form-control'</span>,
+                    <span class=\"string\">'placeholder'</span>: <span class=\"string\">'Book Title'</span>
+                }
+            ),
+            <span class=\"string\">'author'</span>: forms.TextInput(
+                attrs={
+                    <span class=\"string\">'class'</span>: <span class=\"string\">'form-control'</span>,
+                    <span class=\"string\">'placeholder'</span>: <span class=\"string\">'Author Name'</span>
+                }
+            ),
+            <span class=\"string\">'isbn'</span>: forms.TextInput(
+                attrs={
+                    <span class=\"string\">'class'</span>: <span class=\"string\">'form-control'</span>,
+                    <span class=\"string\">'placeholder'</span>: <span class=\"string\">'13-digit ISBN'</span>
+                }
+            ),
+            <span class=\"string\">'quantity'</span>: forms.NumberInput(
+                attrs={
+                    <span class=\"string\">'class'</span>: <span class=\"string\">'form-control'</span>,
+                    <span class=\"string\">'min'</span>: <span class=\"string\">'1'</span>
+                }
+            ),
+        }
+            </div>
+            
+            <div class="explanation">
+                <h5>📖 What is ModelForm?</h5>
+                <p>ModelForm automatically creates a form based on your model fields. It saves you from manually defining each field. The <span class="highlight">widgets</span> customize how fields appear in HTML.</p>
+            </div>
+        </div>
+        
+        <!-- Views Section -->
+        <div class="section" id="views">
+            <h2>👁️ CRUD Views</h2>
+            
+            <h3>1. Create Book View</h3>
+            <div class="code-block"><span class="keyword">def</span> <span class="function\">create_book</span>(request):
+    <span class=\"keyword\">if</span> request.method == <span class=\"string\">'POST'</span>:
+        form = BookForm(request.POST)
+        <span class=\"keyword\">if</span> form.is_valid():
+            form.save()
+            <span class=\"keyword\">return</span> redirect(<span class=\"string\">'myapp:book_list'</span>)
+    <span class=\"keyword\">else</span>:
+        form = BookForm()
+    
+    context = {<span class=\"string\">'form'</span>: form}
+    <span class=\"keyword\">return</span> render(request, <span class=\"string\">'myapp/create_book.html'</span>, 
+                      context)
+            </div>
+            
+            <h3>2. Book Detail View</h3>
+            <div class="code-block"><span class=\"keyword\">def</span> <span class=\"function\">book_detail</span>(request, pk):
+    <span class=\"keyword\">try</span>:
+        book = Book.objects.get(pk=pk)
+    <span class=\"keyword\">except</span> Book.DoesNotExist:
+        <span class=\"keyword\">return</span> render(request, 
+            <span class=\"string\">'myapp/404.html'</span>, 
+            {<span class=\"string\">'message'</span>: <span class=\"string\">'Book not found'</span>})
+    
+    context = {<span class=\"string\">'book'</span>: book}
+    <span class=\"keyword\">return</span> render(request, <span class=\"string\">'myapp/book_detail.html'</span>, 
+                      context)
+            </div>
+            
+            <h3>3. Edit Book View</h3>
+            <div class="code-block"><span class=\"keyword\">def</span> <span class=\"function\">edit_book</span>(request, pk):
+    <span class=\"keyword\">try</span>:
+        book = Book.objects.get(pk=pk)
+    <span class=\"keyword\">except</span> Book.DoesNotExist:
+        <span class=\"keyword\">return</span> render(request, <span class=\"string\">'myapp/404.html'</span>)
+    
+    <span class=\"keyword\">if</span> request.method == <span class=\"string\">'POST'</span>:
+        form = BookForm(request.POST, instance=book)
+        <span class=\"keyword\">if</span> form.is_valid():
+            form.save()
+            <span class=\"keyword\">return</span> redirect(<span class=\"string\">'myapp:book_detail'</span>, 
+                            pk=book.pk)
+    <span class=\"keyword\">else</span>:
+        form = BookForm(instance=book)
+    
+    context = {<span class=\"string\">'form'</span>: form, <span class=\"string\">'book'</span>: book}
+    <span class=\"keyword\">return</span> render(request, 
+                      <span class=\"string\">'myapp/edit_book.html'</span>, context)
+            </div>
+            
+            <h3>4. Delete Book View</h3>
+            <div class="code-block"><span class=\"keyword\">def</span> <span class=\"function\">delete_book</span>(request, pk):
+    <span class=\"keyword\">try</span>:
+        book = Book.objects.get(pk=pk)
+    <span class=\"keyword\">except</span> Book.DoesNotExist:
+        <span class=\"keyword\">return</span> render(request, <span class=\"string\">'myapp/404.html'</span>)
+    
+    <span class=\"keyword\">if</span> request.method == <span class=\"string\">'POST'</span>:
+        book.delete()
+        <span class=\"keyword\">return</span> redirect(<span class=\"string\">'myapp:book_list'</span>)
+    
+    context = {<span class=\"string\">'book'</span>: book}
+    <span class=\"keyword\">return</span> render(request, 
+                      <span class=\"string\">'myapp/delete_book.html'</span>, context)
+            </div>
+            
+            <div class="info">
+                <h5>ℹ️ Note</h5>
+                <p>Add these views to <span class="highlight">myapp/views.py</span>. Don't forget to import BookForm and redirect at the top!</p>
+            </div>
+        </div>
+        
+        <!-- Templates Section -->
+        <div class="section" id="templates">
+            <h2>🎨 Templates</h2>
+            
+            <h3>1. Create/Edit Book Form Template</h3>
+            <p>File: <span class="highlight">myapp/templates/myapp/create_book.html</span></p>
+            
+            <div class="code-block\"><span class=\"tag\">&lt;!DOCTYPE html&gt;</span>
+<span class=\"tag\">&lt;html lang=\"en\"&gt;</span>
+<span class=\"tag\">&lt;head&gt;</span>
+    <span class=\"tag\">&lt;meta charset=\"UTF-8\"&gt;</span>
+    <span class=\"tag\">&lt;meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"&gt;</span>
+    <span class=\"tag\">&lt;title&gt;</span>Add New Book<span class=\"tag\">&lt;/title&gt;</span>
+    <span class=\"tag\">&lt;style&gt;</span>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            font-weight: 600;
+            color: #333;
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+        input, textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: inherit;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 5px rgba(102, 126, 234, 0.3);
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-submit {
+            background: #667eea;
+            color: white;
+        }
+        .btn-submit:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .btn-cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+        .btn-cancel:hover {
+            background: #d0d0d0;
+        }
+        .error-message {
+            color: #d32f2f;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    <span class=\"tag\">&lt;/style&gt;</span>
+<span class=\"tag\">&lt;/head&gt;</span>
+<span class=\"tag\">&lt;body&gt;</span>
+    <span class=\"tag\">&lt;div class=\"container\"&gt;</span>
+        <span class=\"tag\">&lt;h1&gt;</span>➕ Add New Book<span class=\"tag\">&lt;/h1&gt;</span>
+        <span class=\"tag\">&lt;form method=\"post\"&gt;</span>
+            {% csrf_token %}
+            {% <span class=\"keyword\">for</span> field <span class=\"keyword\">in</span> form %}
+                <span class=\"tag\">&lt;div&gt;</span>
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% <span class=\"keyword\">if</span> field.errors %}
+                        <span class=\"tag\">&lt;div class=\"error-message\"&gt;</span>
+                        {{ field.errors }}
+                        <span class=\"tag\">&lt;/div&gt;</span>
+                    {% <span class=\"keyword\">endif</span> %}
+                <span class=\"tag\">&lt;/div&gt;</span>
+            {% <span class=\"keyword\">endfor</span> %}
+            
+            <span class=\"tag\">&lt;div class=\"button-group\"&gt;</span>
+                <span class=\"tag\">&lt;button type=\"submit\" class=\"btn-submit\"&gt;</span>
+                    ✅ Save Book
+                <span class=\"tag\">&lt;/button&gt;</span>
+                <span class=\"tag\">&lt;button type=\"button\" class=\"btn-cancel\" onclick=\"history.back()\"&gt;</span>
+                    ❌ Cancel
+                <span class=\"tag\">&lt;/button&gt;</span>
+            <span class=\"tag\">&lt;/div&gt;</span>
+        <span class=\"tag\">&lt;/form&gt;</span>
+    <span class=\"tag\">&lt;/div&gt;</span>
+<span class=\"tag\">&lt;/body&gt;</span>
+<span class=\"tag\">&lt;/html&gt;</span>
+            </div>
+            
+            <h3>2. Book Detail Template</h3>
+            <p>File: <span class="highlight">myapp/templates/myapp/book_detail.html</span></p>
+            
+            <div class="explanation">
+                <h5>📖 What to Include</h5>
+                <p>Display single book information with Edit and Delete buttons:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Book title, author, ISBN</li>
+                    <li>Quantity in stock</li>
+                    <li>Created and updated dates</li>
+                    <li>Edit button → links to edit page</li>
+                    <li>Delete button → links to delete confirmation</li>
+                </ul>
+            </div>
+            
+            <h3>3. Delete Confirmation Template</h3>
+            <p>File: <span class="highlight">myapp/templates/myapp/delete_book.html</span></p>
+            
+            <div class="warning">
+                <h5>⚠️ Always Confirm Before Delete!</h5>
+                <p>Never delete without asking. Show book details and ask for confirmation first.</p>
+            </div>
+        </div>
+        
+        <!-- URLs Section -->
+        <div class="section" id="urls">
+            <h2>🔗 URL Routes for CRUD</h2>
+            
+            <h3>Update myapp/urls.py</h3>
+            <div class="code-block\"><span class=\"keyword\">from</span> django.urls <span class=\"keyword\">import</span> path
+<span class=\"keyword\">from</span> . <span class=\"keyword\">import</span> views
+
+app_name = <span class=\"string\">'myapp'</span>
+
+urlpatterns = [
+    path(<span class=\"string\">'books/'</span>, views.book_list, 
+         name=<span class=\"string\">'book_list'</span>),
+    path(<span class=\"string\">'books/create/'</span>, views.create_book, 
+         name=<span class=\"string\">'create_book'</span>),
+    path(<span class=\"string\">'books/&lt;int:pk&gt;/'</span>, views.book_detail, 
+         name=<span class=\"string\">'book_detail'</span>),
+    path(<span class=\"string\">'books/&lt;int:pk&gt;/edit/'</span>, views.edit_book, 
+         name=<span class=\"string\">'edit_book'</span>),
+    path(<span class=\"string\">'books/&lt;int:pk&gt;/delete/'</span>, views.delete_book, 
+         name=<span class=\"string\">'delete_book'</span>),
+]
+            </div>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>URL Pattern</th>
+                        <th>View</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/books/</code></td>
+                        <td>book_list</td>
+                        <td>List all books</td>
+                    </tr>
+                    <tr>
+                        <td><code>/books/create/</code></td>
+                        <td>create_book</td>
+                        <td>Create new book</td>
+                    </tr>
+                    <tr>
+                        <td><code>/books/5/</code></td>
+                        <td>book_detail</td>
+                        <td>View book with ID 5</td>
+                    </tr>
+                    <tr>
+                        <td><code>/books/5/edit/</code></td>
+                        <td>edit_book</td>
+                        <td>Edit book with ID 5</td>
+                    </tr>
+                    <tr>
+                        <td><code>/books/5/delete/</code></td>
+                        <td>delete_book</td>
+                        <td>Delete book with ID 5</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Testing Section -->
+        <div class="section" id="testing">
+            <h2>✅ Testing CRUD Operations</h2>
+            
+            <h3>Testing Checklist</h3>
+            <div class="success">
+                <h5>✓ Create Operation</h5>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>☐ Visit /books/create/</li>
+                    <li>☐ Fill form with book details</li>
+                    <li>☐ Click Save</li>
+                    <li>☐ Book appears in book list</li>
+                </ul>
+            </div>
+            
+            <div class="success">
+                <h5>✓ Read Operation</h5>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>☐ Click on a book in list</li>
+                    <li>☐ Detail page loads correctly</li>
+                    <li>☐ All information displays</li>
+                </ul>
+            </div>
+            
+            <div class="success">
+                <h5>✓ Update Operation</h5>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>☐ Click Edit button on detail page</li>
+                    <li>☐ Form pre-fills with current data</li>
+                    <li>☐ Change some values</li>
+                    <li>☐ Click Save</li>
+                    <li>☐ Changes appear in database</li>
+                </ul>
+            </div>
+            
+            <div class="success">
+                <h5>✓ Delete Operation</h5>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>☐ Click Delete button</li>
+                    <li>☐ Confirmation page shows</li>
+                    <li>☐ Click Confirm Delete</li>
+                    <li>☐ Book removed from list</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer>
+            <h3>📚 Congratulations!</h3>
+            <p>You've completed Phase 2 - Full CRUD Operations!</p>
+            <p style="margin-top: 20px; font-size: 0.9em;">
+                <strong>Next Step:</strong> Move on to Phase 3 for Student Management System!
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
